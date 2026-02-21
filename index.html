@@ -115,7 +115,7 @@ header{
 /* floating cart button (estilo WhatsApp) */
 .cart-float {
   position: fixed;
-  bottom: 110px; /* above whatsapp button */
+  bottom: 170px; /* above whatsapp button */
   right: 22px;
   width: 55px;
   height: 55px;
@@ -161,7 +161,7 @@ header{
 /* whatsapp float (kept as before) */
 .whatsapp-float {
   position: fixed;
-  bottom: 22px;
+  bottom: 95px;
   right: 22px;
   width: 55px;
   height: 55px;
@@ -1024,7 +1024,48 @@ footer {
     }
 }
 
+/* =====================================
+   BOTÃO ATENDIMENTO PREMIUM
+   ===================================== */
 
+.btn-atendimento {
+  position: fixed;
+  bottom: 22px; /* ficará embaixo */
+  right: 22px;
+
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #0056d2, #0d6efd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  z-index: 9999;
+  text-decoration: none;
+
+  animation: pulseAtendimento 2s infinite;
+  transition: 0.3s ease;
+}
+
+.btn-atendimento:hover {
+    transform: scale(1.1);
+}
+
+/* Animação pulsando suave */
+@keyframes pulseAtendimento {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13,110,253, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 18px rgba(13,110,253, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(13,110,253, 0);
+    }
+}
 </style>
 </head>
 <body>
@@ -1550,6 +1591,20 @@ footer {
     z-index: 99998;
 "></div>
 
+<a href="https://wa.me/5538991760659?text=Olá%20👋%20Gostaria%20de%20falar%20com%20um%20atendente%20sobre%20um%20pedido."
+   class="btn-atendimento"
+   target="_blank"
+   aria-label="Atendimento Online">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 24 24"
+         width="28"
+         height="28"
+         fill="white">
+        <path d="M12 1a9 9 0 00-9 9v4a3 3 0 003 3h1v-6H5v-1a7 7 0 0114 0v1h-2v6h1a3 3 0 003-3v-4a9 9 0 00-9-9zm-5 14h10a1 1 0 010 2H7a1 1 0 010-2z"/>
+    </svg>
+
+</a>
 
 <script>
 /* ========== CONFIG ========= */
