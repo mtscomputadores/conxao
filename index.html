@@ -186,26 +186,25 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 }
 
 
-/* ===== BANNER TOTALMENTE LIVRE ===== */
-
+/* ===== BANNER AUTO-AJUSTÁVEL (TAMANHO REAL DA IMAGEM) ===== */
+.banner-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
 
 .banner-track {
   display: flex;
-  transition: transform 0.6s ease-in-out;
   width: 100%;
-  height: 100%;
 }
 
 .banner-track img {
-  min-width: 100%;
   width: 100%;
-  height: 100%;
-  object-fit: contain;       /* NÃO corta e NÃO estoura */
-  image-rendering: auto;
-  image-rendering: crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  border-radius: 12px;
-  background: #000;          /* fundo elegante se sobrar espaço */
+  height: auto;          /* 🔥 IMAGEM DEFINE A ALTURA */
+  object-fit: contain;   /* mostra a imagem inteira */
+  display: block;
 }
 
 .banner-carousel .arrow-btn { width:48px; height:48px; }
@@ -380,7 +379,6 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 
   .carousel-track img {
     height: 100% !important;
-    object-fit: cover;
 }
 
 
