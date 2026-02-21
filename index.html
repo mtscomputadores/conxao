@@ -1175,7 +1175,161 @@ footer {
     }
 }
 
+/* ===== INSTAGRAM DISCRETO PREMIUM ===== */
 
+.instagram-loja {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 18px 0;
+}
+
+.instagram-loja a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+
+  animation: pulseInsta 3s infinite ease-in-out;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* tamanho menor */
+.instagram-loja img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Pulsar lento e suave */
+@keyframes pulseInsta {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* Brilho passando */
+.instagram-loja a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.1),
+    rgba(255,255,255,0.6),
+    rgba(255,255,255,0.1)
+  );
+  transform: skewX(-25deg);
+  animation: shineInsta 4s infinite;
+}
+
+@keyframes shineInsta {
+  0% { left: -60%; }
+  100% { left: 140%; }
+}
+
+/* Hover leve */
+.instagram-loja a:hover {
+  transform: scale(1.06);
+}
+
+/* ===== MOBILE SEARCH ===== */
+
+.search-icon-mobile {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ===== MOBILE SEARCH SLIDE ===== */
+
+.search-icon-mobile {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ===== MOBILE SEARCH PREMIUM ===== */
+
+.search-icon-mobile {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 18px;
+  z-index: 3000;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+
+  /* Mostra só a lupa */
+  .search-icon-mobile {
+    display: block;
+  }
+
+  /* Campo escondido fora da tela */
+  #q {
+    position: fixed;
+    top: 1px;
+    right: -100%;
+    width: 90%;
+    height: 45px;
+    padding: 0 40px 0 15px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    outline: none;
+    background: white;
+    transition: right 0.3s ease;
+    z-index: 2500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+
+  /* Quando ativa */
+  #q.mobile-active {
+    right: 3%;
+  }
+
+  /* Ícone lupa dentro do campo */
+  #q.mobile-active::placeholder {
+    color: #888;
+  }
+
+  /* Lupa interna */
+  #q.mobile-active {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23888" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2a8 8 0 105.293 14.293l5.707 5.707 1.414-1.414-5.707-5.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>');
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: right 15px center;
+}
+
+  /* Esconde campo padrão da linha */
+  .campo-pesquisa {
+    display: none;
+  }
+
+  #q.mobile-active {
+    display: block;
+  }
+}
 </style>
 </head>
 <body>
@@ -1192,7 +1346,9 @@ footer {
     margin-right: 10px;
 ">☰</button>
 
-    <img src="/public/conexao.png" class="logo-topo" alt="Logo">
+    <img src="/public/2.png" class="logo-topo" alt="Logo">
+
+    <button id="searchToggleMobile" class="search-icon-mobile">🔍</button>
 
     <div class="linha-baixo">
         <h1 class="nome-loja">Conexão Shop</h1>
@@ -1215,6 +1371,13 @@ footer {
 </section>
 
   
+
+<div class="instagram-loja">
+  <a href="https://instagram.com/conexaoshopmg" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+    <span>@conexaoshopmg</span>
+  </a>
+</div>
 
   <!-- AQUI — COLOQUE OS FILTROS -->
 <div class="filters">
@@ -3092,7 +3255,13 @@ window.selecionarCategoriaMenu = (cat) => {
     mask.style.display = "none";
 };
 
+const toggleMobile = document.getElementById("searchToggleMobile");
+const campoBusca = document.getElementById("q");
 
+toggleMobile.addEventListener("click", () => {
+  campoBusca.classList.toggle("mobile-active");
+  campoBusca.focus();
+});
   // initial load
   mostrarSkeletons();
 
@@ -3107,5 +3276,4 @@ setTimeout(() => {
 });
 </script>
 </body>
-
 </html>
