@@ -186,30 +186,22 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 }
 
 
-/* banners (kept) */
+/* ===== BANNER TOTALMENTE LIVRE ===== */
 .banner-carousel {
-  position: relative;
   width: 100%;
-  height: 300px;
   overflow: hidden;
-  margin-top: 10px;
   border-radius: 12px;
-  background: #0a0a0a;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 }
 
 .banner-track {
   display: flex;
-  transition: transform 0.6s ease-in-out;
   width: 100%;
-  height: 100%;
 }
 
 .banner-track img {
-  min-width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
+  width: 100%;
+  height: auto;      /* 🔥 IMAGEM DEFINE A ALTURA */
+  display: block;
 }
 
 .banner-carousel .arrow-btn { width:48px; height:48px; }
