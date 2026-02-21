@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categorias de Produtos</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    padding: 20px;
+  }
+
+  h1 {
+    color: #222;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .btn-novo {
+    background: #1e1e2f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+  }
+
+  .btn-novo:hover {
+    background: #34344a;
+  }
+
+  .form-container {
+    display: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  button.salvar {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background: #1e1e2f;
+    color: white;
+  }
+
+  td button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  td button:hover {
+    background: #c82333;
+  }
+
+  /* Botão Editar */
+.btn-editar {
+  background: #007bff; /* azul padrão */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.btn-editar:hover {
+  background: #0056b3; /* azul mais escuro */
+}
+
+</style>
+</head>
+<body>
+
+  <h1>Gerenciar Categorias</h1>
+
+  <button class="btn-novo" onclick="toggleForm()">➕ Nova Categoria</button>
+
+ <div class="form-container" id="form-categoria">
+  <h2 id="titulo-form">Criar Nova Categoria</h2>
+
+  <input type="hidden" id="id-edicao">
+  <input type="text" id="nome-categoria" placeholder="Nome da Categoria" required>
+
+  <button class="salvar" onclick="salvarCategoria()">Salvar Categoria</button>
+</div>
+
+
+  <h2>Lista de Categorias</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista-categorias">
+      <tr><td colspan="3" style="text-align:center; color:#888;">Nenhuma categoria cadastrada</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+  const tabela = document.getElementById('lista-categorias');
+  const form = document.getElementById('form-categoria');
+  const API_URL = "/api/categorias";
+
+  async function carregarCategorias() {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    atualizarTabela(data);
+  }
+
+  function toggleForm() {
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+  }
+
+  async function salvarCategoria() {
+  const nome = document.getElementById('nome-categoria').value.trim();
+  const id = document.getElementById('id-edicao').value;
+
+  if (!nome) {
+    alert("Informe o nome da categoria!");
+    return;
+  }
+
+  if (id) {
+    // EDITAR
+    await fetch(API_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, nome })
+    });
+  } else {
+    // CRIAR
+    await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome })
+    });
+  }
+
+  document.getElementById('id-edicao').value = "";
+  document.getElementById('nome-categoria').value = "";
+  document.getElementById('titulo-form').textContent = "Criar Nova Categoria";
+  form.style.display = "none";
+
+  carregarCategorias();
+}
+
+
+  async function removerCategoria(id) {
+    await fetch(`${API_URL}?id=${id}`, { method: "DELETE" });
+    carregarCategorias();
+  }
+
+  function atualizarTabela(categorias) {
+  if (categorias.length === 0) {
+    tabela.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#888;">Nenhuma categoria cadastrada</td></tr>`;
+    return;
+  }
+
+  tabela.innerHTML = categorias.map(c => `
+    <tr>
+      <td>${c.id}</td>
+      <td>${c.nome}</td>
+      <td>
+        <button class="btn-editar" onclick="editarCategoria(${c.id}, '${c.nome}')">✏️ Editar</button>
+        <button onclick="removerCategoria(${c.id})">🗑️ Excluir</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function editarCategoria(id, nome) {
+  document.getElementById("titulo-form").textContent = "Editar Categoria";
+  document.getElementById("id-edicao").value = id;
+  document.getElementById("nome-categoria").value = nome;
+
+  form.style.display = "block";
+}
+
+
+
+  carregarCategorias();
+</script>
+
+
+</body>
+</html>

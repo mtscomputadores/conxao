@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Catálogo - Loja Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --muted:#777;
+    --card:#f8f8f8;
+    --primary:#000;
+    --radius:14px;
+  }
+  body{
+    margin:0;font-family:Inter, sans-serif;background:var(--bg);
+  }
+  header{
+    width:100%;padding:18px 4%;display:flex;align-items:center;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 4px rgba(0,0,0,.08);
+  }
+  header h1{font-size:22px;margin:0;}
+  .search-box{flex:1;margin-left:20px;}
+  .search-box input{
+    width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:var(--radius);font-size:16px;
+  }
+
+  /* Carrossel */
+  .carousel{
+    width:100%;overflow:hidden;position:relative;margin-top:10px;
+  }
+  .carousel-track{
+    display:flex;transition:0.6s;
+  }
+  .carousel-slide img{
+    width:100%;height:240px;object-fit:cover;
+  }
+
+  /* GRID PRODUTOS */
+  .products{
+    padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px;
+  }
+  .product{
+    background:var(--card);border-radius:var(--radius);padding:14px;cursor:pointer;transition:.2s;
+  }
+  .product:hover{transform:scale(1.03);} 
+  .product img{width:100%;height:170px;object-fit:cover;border-radius:var(--radius);} 
+  .product h3{font-size:16px;margin:8px 0 4px;} 
+  .product p{color:var(--muted);font-size:14px;margin:0;} 
+  .price{font-weight:700;font-size:17px;margin-top:6px;} 
+
+  /* MODAL */
+  .modal-bg{
+    position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:50;
+  }
+  .modal{
+    width:90%;max-width:500px;background:#fff;border-radius:var(--radius);padding:18px;animation:popup .3s;
+  }
+  @keyframes popup{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:scale(1);}}
+  .modal img{width:100%;border-radius:var(--radius);height:270px;object-fit:cover;}
+  .modal h2{margin:10px 0;font-size:20px;}
+  .modal p{color:var(--muted);}
+  .modal .price{font-size:22px;margin:12px 0;}
+  .modal button{
+    width:100%;padding:12px;background:#000;color:#fff;border:none;border-radius:var(--radius);font-size:17px;cursor:pointer;
+  }
+  .close-btn{background:#ccc !important;color:#000 !important;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Catálogo</h1>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Buscar produtos..." />
+  </div>
+</header>
+
+<div class="carousel">
+  <div class="carousel-track" id="carouselTrack"></div>
+</div>
+
+<section class="products" id="products"></section>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const API = "https://server-ashen.vercel.app";
+let produtos = [];
+let banners = [];
+let currentSlide = 0;
+
+async function carregarTudo(){
+  await carregarBanners();
+  await carregarProdutos();
+}
+
+/* ================= BANNERS ================= */
+async function carregarBanners(){
+  try{
+    const r = await fetch(`${API}/banners`);
+    banners = await r.json();
+
+    const track = document.getElementById('carouselTrack');
+    track.innerHTML = banners.map(b => {
+      const img = b.imagem_base64
+        ? (b.imagem_base64.startsWith('data:image') ? b.imagem_base64 : `data:image/jpeg;base64,${b.imagem_base64}`)
+        : 'https://via.placeholder.com/600x240';
+      return `<div class='carousel-slide'><img src="${img}"></div>`;
+    }).join('');
+
+    iniciarCarrossel();
+  }catch(e){console.log("Erro banners", e)}
+}
+
+function iniciarCarrossel(){
+  const track = document.getElementById('carouselTrack');
+  setInterval(()=>{
+    currentSlide = (currentSlide + 1) % banners.length;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+  }, 3500);
+}
+
+/* ================= PRODUTOS ================= */
+async function carregarProdutos(){
+  try{
+    const r = await fetch(`${API}/produtos`);
+    let data = await r.json();
+    produtos = data.filter(p => p.estoque !== "0");
+    renderProdutos(produtos);
+  }catch(e){console.log("Erro produtos", e)}
+}
+
+function renderProdutos(lista){
+  const box = document.getElementById('products');
+  box.innerHTML = lista.map(p => templateProduto(p)).join('');
+}
+
+function templateProduto(p){
+  const img = p.imagem_base64
+    ? (p.imagem_base64.startsWith('data:image') ? p.imagem_base64 : `data:image/jpeg;base64,${p.imagem_base64}`)
+    : 'https://via.placeholder.com/300x300';
+  return `
+    <div class="product" onclick="abrirModal(${p.id})">
+      <img src="${img}">
+      <h3>${p.nome}</h3>
+      <p>${p.descricao || ''}</p>
+      <div class="price">R$ ${p.preco}</div>
+    </div>
+  `;
+}
+
+/* ================= BUSCA ================= */
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const txt = e.target.value.toLowerCase();
+  const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(txt));
+  renderProdutos(filtrados);
+});
+
+/* ================= MODAL ================= */
+function abrirModal(id){
+  const p = produtos.find(x=>x.id === id);
+  if(!p) return;
+
+  const img = p.imagem_base64
+    ? (p.imagem_base64.startsWith('data:image') ? p.imagem_base64 : `data:image/jpeg;base64,${p.imagem_base64}`)
+    : 'https://via.placeholder.com/300x300';
+
+  document.getElementById('modal').innerHTML = `
+    <img src="${img}">
+    <h2>${p.nome}</h2>
+    <p>${p.descricao || ''}</p>
+    <div class="price">R$ ${p.preco}</div>
+    <button onclick="adicionarCarrinho(${p.id})">Adicionar ao Carrinho</button>
+    <button class='close-btn' onclick='fecharModal()'>Fechar</button>
+  `;
+
+  document.getElementById('modalBg').style.display = 'flex';
+}
+
+function fecharModal(){
+  document.getElementById('modalBg').style.display = 'none';
+}
+
+document.getElementById('modalBg').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalBg') fecharModal();
+});
+
+/* ================= CARRINHO ================= */
+let carrinho = [];
+function adicionarCarrinho(id){
+  const item = produtos.find(p=>p.id===id);
+  carrinho.push(item);
+  alert("Produto adicionado ao carrinho!");
+  fecharModal();
+}
+
+carregarTudo();
+</script>
+</body>
+</html>
