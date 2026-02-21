@@ -186,36 +186,34 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 }
 
 
-/* ===== BANNER CORRIGIDO ===== */
+/* ===== BANNER TAMANHO REAL ===== */
+
 .banner-carousel {
   width: 100%;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
-
-  aspect-ratio: 16 / 6;   /* 🔥 proporcional no PC */
-  max-height: 500px;
 }
 
 .banner-track {
   position: relative;
   width: 100%;
-  height: 100%;
 }
 
 .banner-track img {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;          /* 🔥 ESSENCIAL */
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
 }
 
 .banner-track img.active {
   opacity: 1;
-  z-index: 1;
+  position: relative;    /* 🔥 ESSENCIAL */
 }
 .banner-carousel .arrow-btn { width:48px; height:48px; }
 
