@@ -186,27 +186,27 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 }
 
 
-/* ===== BANNER AUTO-AJUSTÁVEL (TAMANHO REAL DA IMAGEM) ===== */
+/* ===== BANNER PROFISSIONAL ===== */
 .banner-carousel {
-  position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow: hidden; /* 🔥 ESSENCIAL */
+  position: relative;
   border-radius: 12px;
-  background: #000;
 }
 
 .banner-track {
   display: flex;
+  transition: transform 0.6s ease-in-out;
   width: 100%;
 }
 
 .banner-track img {
+  min-width: 100%; /* 🔥 cada imagem ocupa 100% */
   width: 100%;
-  height: auto;          /* 🔥 IMAGEM DEFINE A ALTURA */
-  object-fit: contain;   /* mostra a imagem inteira */
+  height: auto;
   display: block;
+  flex-shrink: 0; /* 🔥 impede encolher */
 }
-
 .banner-carousel .arrow-btn { width:48px; height:48px; }
 
 .products-grid {
@@ -1016,24 +1016,7 @@ footer {
     }
 }
 
-/* ===== BANNER 100% ADAPTÁVEL ===== */
-.banner-carousel {
-  width: 100%;
-  overflow: hidden;
-  border-radius: 12px;
-}
 
-.banner-track {
-  display: flex;
-  width: 100%;
-}
-
-.banner-track img {
-  width: 100%;
-  height: auto !important;   /* 🔥 imagem define altura */
-  object-fit: contain !important; /* mostra inteira */
-  display: block;
-}
 </style>
 </head>
 <body>
