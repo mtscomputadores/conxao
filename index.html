@@ -285,7 +285,6 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
 /* small responsive tweaks */
 @media(max-width:480px){
   .arrow-btn, #prevProducts, #nextProducts { width: 38px; height: 38px; }
-  .carousel-track img, .banner-track img { height: 220px; }
 }
 
 /* ===== MODAL PADRONIZADO ===== */
@@ -503,28 +502,6 @@ footer{padding:28px 18px;color:var(--muted);text-align:center}
   flex: 1; /* ocupa o restante do espaço */
 }
 
-
-/* Altura padrão no PC */
-.banner-carousel,
-.banner-track img {
-    height: 300px !important;
-}
-
-/* Ajuste perfeito no mobile */
-@media (max-width: 600px) {
-    .banner-carousel,
-    .banner-track img {
-        height: 160px !important; /* banner menor e sem cortar */
-    }
-}
-
-/* Ajuste ainda menor para telas muito pequenas */
-@media (max-width: 400px) {
-    .banner-carousel,
-    .banner-track img {
-        height: 130px !important;
-    }
-}
 
 .logo-img {
   width: 55px;
@@ -1039,7 +1016,24 @@ footer {
     }
 }
 
+/* ===== BANNER 100% ADAPTÁVEL ===== */
+.banner-carousel {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
 
+.banner-track {
+  display: flex;
+  width: 100%;
+}
+
+.banner-track img {
+  width: 100%;
+  height: auto !important;   /* 🔥 imagem define altura */
+  object-fit: contain !important; /* mostra inteira */
+  display: block;
+}
 </style>
 </head>
 <body>
